@@ -16,7 +16,12 @@ module.exports.add = (question) => {
         lesson,
         type_q,
         type_a,
-        answer
+        answer,
+        1,
+        2,
+        3,
+        4,
+        difficulty
     ) VALUES(
         "${question.text}",
         "${question.image}",
@@ -26,6 +31,11 @@ module.exports.add = (question) => {
         "${question.type_q}",
         "${question.type_a}",
         "${question.answer}"
+        "${question[1]}",
+        "${question[2]}",
+        "${question[3]}",
+        "${question[4]}",
+        "${question.difficulty}"
     );
     `);
 };
