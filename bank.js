@@ -32,8 +32,23 @@ module.exports.add = (question) => {
 module.exports.delete = (id) => {
     this.db.run(`delete from question where id=${id}`);
 };
-module.exports.get = (data) => {
-
+module.exports.get = (data,limit=false,call) => {
+    keys = [];
+    values = [];
+    for (const [key, value] of Object.entries(data)) {
+        keys[keys.length] = `${key}=?`;
+        values[values.length] = value;
+    }
+    keys = keys.toString();
+    var limit_query = '' 
+    if (limit) {
+        limit_query = ` limit ${limit}`
+    }
+    if (keys.length>0) {
+        this.db.all(`select * from question where ${keys} ${limit_query}`,values,call)
+    }else{
+        this.db.all(`select * from question ${limit_query}`,call)
+    }
 };
 module.exports.update = (id,data) => {
     keys = [];
@@ -45,7 +60,7 @@ module.exports.update = (id,data) => {
     keys = keys.toString();
     values[values.length] = id;
     this.db.run(`
-    UPDATE question
+    UPDATE question set
         ${keys}
         where id=? 
         `,values);
