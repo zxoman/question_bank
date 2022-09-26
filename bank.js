@@ -21,7 +21,8 @@ module.exports.add = (question) => {
         2,
         3,
         4,
-        difficulty
+        difficulty,
+        term
     ) VALUES(
         "${question.text}",
         "${question.image}",
@@ -35,7 +36,8 @@ module.exports.add = (question) => {
         "${question[2]}",
         "${question[3]}",
         "${question[4]}",
-        "${question.difficulty}"
+        "${question.difficulty}",
+        "${question.term}"
     );
     `);
 };
