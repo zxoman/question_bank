@@ -8,38 +8,43 @@ module.exports.db = new this.sql.Database(
     }
 );
 module.exports.add = (question) => {
+    values = [];
+    keys = [];
+    for (const [key, value] of Object.entries(question)) {
+        values[values.length] = value;
+        keys[keys.length] = key;
+
+
+    }
+    console.log(keys);
     this.db.run(`INSERT INTO question (
-        text,
-        image,
-        class,
-        unit,
-        lesson,
-        type_q,
-        type_a,
-        answer,
         1,
         2,
         3,
         4,
+        class,
+        term,
+        unit,
+        lesson,
+        type_a,
         difficulty,
-        term
+        text,
+        answer
     ) VALUES(
-        "${question.text}",
-        "${question.image}",
-        ${question.class},
-        ${question.unit},
-        ${question.lesson},
-        "${question.type_q}",
-        "${question.type_a}",
-        "${question.answer}"
-        "${question[1]}",
-        "${question[2]}",
-        "${question[3]}",
-        "${question[4]}",
-        "${question.difficulty}",
-        "${question.term}"
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?
     );
-    `);
+    `,values);
 };
 module.exports.delete = (id) => {
     this.db.run(`delete from question where id=${id}`);
