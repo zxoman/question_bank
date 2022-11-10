@@ -21,5 +21,14 @@ exports.connect = (socket,db=bank)=>{
             db.delete(id)
             c.emit("del","success")
         })
+        c.on("create_exam",(ch,ch_num,con,num)=>{
+            z.exam(ch,ch_num,con,num)
+            c.emit("exam","success")
+        })
+        c.on("get_exam",(id)=>{
+            z.exam_with_id(id,(d)=>{
+                c.emit("get_exam",d);
+            })            
+        })
     })
 }

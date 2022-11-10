@@ -114,33 +114,42 @@ module.exports.shuffle = (array) => {
 
   return array;
 };
-module.exports.exam = (
-  type,
-  obj = false,
-  ch = [],
-  ch_num = false,
-  con = [],
-  num
-) => {
-  console.log(ch);
-  ch = this.shuffle(ch).slice(0, ch_num);
-  con = this.shuffle(con);
-  qus = [];
-  console.log(ch);
-  this.getwids(ch, (e, d, s) => {
-    console.log(d.length);
-    for (const property in d) {
-        console.log(d[property])      
-        //qus[qus.length] = da;
-
-      }
-  });
-  if (con.length > 0) {
-    this.getwids(con, (e, d, s) => {
-      d.foreach((da) => {
-        qus[qus.length] = da;
-      });
-    });
+module.exports.exam = (ch = [], ch_num = false, con = [], num) => {
+  this.db.run(`delete from exams`);
+  for (let index = 0; index < num; index++) {
+    console.log(num, index);
+    ch = this.shuffle(ch).slice(0, ch_num);
+    con = this.shuffle(con);
+    var qus = this.shuffle([...ch, ...con]);
+    this.db.run(
+      `
+      INSERT INTO exams (
+        exam,
+        id
+        ) VALUES(
+          ?,
+          ?
+        );
+    `,
+      [this.shuffle(qus), index]
+    );
   }
-  console.log(this.shuffle(qus));
 };
+module.exports.exam_with_id = (id,call) => {
+  this.db.all(`select * from exams where id=?`, [id], (ss,da,err) => {
+    qus_ids = da[0].exam.split(',');
+    this.getwids(qus_ids, (s, d, e) => {
+      call(d)
+    });
+  });
+};
+
+//   }
+//   this.getwids(con, (e, d, s) => {
+//     for (const property in d) {
+//       qus[qus.length] = d[property];
+
+//     }
+//     call(this.shuffle(qus))
+//   });
+//

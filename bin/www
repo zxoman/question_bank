@@ -32,7 +32,6 @@ const io = require("socket.io")(server, {
         credentials: true
     }
 });
-const { text } = require('express');
 const SocketOn = require('../socketOn');
 server.listen(port);
 server.on('error', onError);
