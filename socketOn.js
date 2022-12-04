@@ -21,11 +21,12 @@ exports.connect = (socket,db=bank)=>{
             db.delete(id)
             c.emit("del","success")
         })
-        c.on("create_exam",(ch,ch_num,con,num)=>{
-            db.exam(ch,ch_num,con,num)
+        c.on("create_exam",(data)=>{
+            db.exam(data.ch,data.ch_num,data.con,data.num);
             c.emit("exam","success")
         })
         c.on("get_exam",(id)=>{
+            console.log(id);
             db.exam_with_id(id,(d)=>{
                 c.emit("get_exam",d);
             })            
