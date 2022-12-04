@@ -95,14 +95,6 @@ module.exports.getwids = (data, call) => {
   ids = `in(${"".padStart(data.length * 2, ",?").slice(1)})`;
   this.db.all(`select * from question where id ${ids} `, data, call);
 };
-module.exports.getch = (data, num, call) => {
-  ids = `in(${"".padStart(data.length * 2, ",?").slice(1)})`;
-  this.db.all(
-    `select id from question where id ${ids} ORDER BY RANDOM() limit ${num}`,
-    data,
-    call
-  );
-};
 module.exports.shuffle = (array) => {
   let currentIndex = array.length,
     randomIndex;
@@ -125,32 +117,22 @@ module.exports.shuffle = (array) => {
 module.exports.exam = (ch = [], ch_num = false, con = [], num,call) => {
   this.db.run(`delete from exams`);
   for (let index = 0; index < num; index++) {
-    // console.log(num, index);
-    // ch = this.shuffle(ch).slice(0, ch_num);
-    // con = this.shuffle(con);
-    // var qus = this.shuffle();
-    //SELECT * FROM question ORDER BY RANDOM() LIMIT 20;
-    this.getch(ch, ch_num, (s, d, e) => {
-      //console.log([...d, ...con])
-      arr = [];
-      for (let index = 0; index < d.length; index++) {
-        const element = d[index];
-        arr[index] = element.id;
-      }
-      ex = [...arr, ...con];
-      this.db.run(
-        `
-        INSERT INTO exams (
-          exam,
-          id
-          ) VALUES(
-            ?,
-            ?
-          );
-      `,
-        [ex, index]
-      );
-    });
+    console.log(num, index);
+    ch = this.shuffle(ch).slice(0, ch_num);
+    con = this.shuffle(con);
+    var qus = this.shuffle([...ch, ...con]);
+    this.db.run(
+      `
+      INSERT INTO exams (
+        exam,
+        id
+        ) VALUES(
+          ?,
+          ?
+        );
+    `,
+      [this.shuffle(qus), index]
+    );
   }
 };
 module.exports.exam_with_id = (id, call) => {
