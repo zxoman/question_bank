@@ -31,5 +31,17 @@ exports.connect = (socket,db=bank)=>{
                 c.emit("get_exam",d);
             })            
         })
+        c.on("scaner",(id)=>{
+            console.log(id);
+            db.exam_with_id(id,(d)=>{
+                ans = [];
+                for (const element of d) {
+                    ans[ans.length] = element.answer;
+                }
+                ans = ans.join("&&")
+                console.log(ans);
+                c.emit("scaner",ans);
+            })            
+        })
     })
 }
