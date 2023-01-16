@@ -57,12 +57,13 @@ module.exports.get = (data, limit = false, call) => {
     keys[keys.length] = `${key}=?`;
     values[values.length] = value;
   }
-  keys = keys.toString();
+  keys = keys.toString().replace(/,/g," and ");
   var limit_query = "";
   if (limit) {
     limit_query = ` limit ${limit}`;
   }
   if (keys.length > 0) {
+    console.log(`select * from question where ${keys} ${limit_query}`);
     this.db.all(
       `select * from question where ${keys} ${limit_query}`,
       values,
