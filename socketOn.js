@@ -22,8 +22,9 @@ exports.connect = (socket,db=bank)=>{
             c.emit("del","success")
         })
         c.on("create_exam",(data)=>{
-            db.exam(data.ch,data.ch_num,data.con,data.num);
-            c.emit("exam","success")
+            db.exam(data.ch,data.ch_num,data.con,data.num,(d)=>{
+                c.emit("exam",d)
+            });
         })
         c.on("get_exam",(id)=>{
             console.log(id);
