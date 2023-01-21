@@ -26,14 +26,16 @@ module.exports.add = (question) => {
         unit,
         lesson,
         type_a,
+        type_q,
         difficulty,
         text,
         answer
     ) VALUES(
-        "",
-        "",
-        "",
-        "",
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
         ?,
         ?,
         ?,
@@ -57,7 +59,7 @@ module.exports.get = (data, limit = false, call) => {
     keys[keys.length] = `${key}=?`;
     values[values.length] = value;
   }
-  keys = keys.toString().replace(/,/g," and ");
+  keys = keys.toString().replace(/,/g, " and ");
   var limit_query = "";
   if (limit) {
     limit_query = ` limit ${limit}`;
@@ -123,8 +125,8 @@ module.exports.shuffle = (array) => {
 
   return array;
 };
-module.exports.exam = (ch = [], ch_num = false, con = [], num,call) => {
-  this.db.run(`delete from exams`);
+module.exports.exam = (ch = [], ch_num = false, con = [], num, call) => {
+  console.log("num:", num);
   for (let index = 0; index < num; index++) {
     // console.log(num, index);
     // ch = this.shuffle(ch).slice(0, ch_num);
@@ -142,25 +144,30 @@ module.exports.exam = (ch = [], ch_num = false, con = [], num,call) => {
       this.db.run(
         `
         INSERT INTO exams (
-          exam,
-          id
+          exam
           ) VALUES(
-            ?,
             ?
           );
       `,
-        [ex, index]
+        [ex]
       );
+      if ((index+1) == num) {
+        this.new_exams(num, call)
+      }
     });
   }
 };
 module.exports.exam_with_id = (id, call) => {
   this.db.all(`select * from exams where id=?`, [id], (ss, da, err) => {
+    console.log(da);
     qus_ids = da[0].exam.split(",");
     this.getwids(qus_ids, (s, d, e) => {
       call(d);
     });
   });
+};
+module.exports.new_exams = (num, call) => {
+  this.db.all(`SELECT * FROM 'exams' ORDER BY 'exams'.'id' DESC limit ${num}`, (ss, da, err) => call(da));
 };
 
 //   }
